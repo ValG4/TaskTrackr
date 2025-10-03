@@ -1,0 +1,47 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Task Tracker frontend built with React",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "axios": "^1.5.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "jest": "^29.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ValG4/TaskTrackr.git"
+  },
+  "keywords": [
+    "react",
+    "frontend",
+    "task-tracker"
+  ],
+  "author": "Valentin Goyet",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
