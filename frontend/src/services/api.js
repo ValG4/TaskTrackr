@@ -1,5 +1,19 @@
-import axios from "axios";
+const API_URL = "http://127.0.0.1:8000";
 
-const API_URL = "http://localhost:8000";
+export async function loginUser(username, password) {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+  return res.json();
+}
 
-export const getTasks = () => axios.get(`${API_URL}/tasks`);
+export async function registerUser(username, password) {
+  const res = await fetch(`${API_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+  return res.json();
+}

@@ -8,6 +8,8 @@ venv/
 .env
 *.pyc
 
+
+
 #React
 
 node_modules/
