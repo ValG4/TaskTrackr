@@ -1,39 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from datetime import timedelta
+from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from ..config import SessionLocal
-from ..models import User
-from ..schemas import UserCreate
+import bcrypt
+import sys
 import os
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+# Add the Backend directory to Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey")
-ALGORITHM = "HS256"
+from config import Config
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def verify_password(plain_password, hashed_password):
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
-@router.post("/register")
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    hashed = pwd_context.hash(user.password)
-    new_user = User(username=user.username, password=hashed)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return {"msg": "User created"}
+def get_password_hash(password):
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
 
-@router.post("/login")
-def login(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.username == user.username).first()
-    if not db_user or not pwd_context.verify(user.password, db_user.password):
-        raise HTTPException(status_code=400, detail="Invalid credentials")
-    token = jwt.encode({"sub": db_user.username}, SECRET_KEY, algorithm=ALGORITHM)
-    return {"access_token": token}
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, Config.SECRET_KEY, algorithm="HS256")
+    return encoded_jwt

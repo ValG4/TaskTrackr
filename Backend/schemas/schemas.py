@@ -1,25 +1,58 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from datetime import datetime
+from typing import Optional
 
-class UserCreate(BaseModel):
+# User schemas
+class UserBase(BaseModel):
     username: str
+    email: EmailStr
+
+class UserCreate(UserBase):
     password: str
 
-class UserOut(BaseModel):
+class UserResponse(UserBase):
     id: int
-    username: str
-    class Config:
-        orm_mode = True
+    created_at: datetime
 
+    class Config:
+        from_attributes = True
+
+# Task schemas
 class TaskBase(BaseModel):
     title: str
-    description: str = ""
-    completed: bool = False
+    description: Optional[str] = None
+    priority: Optional[str] = "medium"
+    status: Optional[str] = "pending"
+    due_date: Optional[datetime] = None
 
 class TaskCreate(TaskBase):
     pass
 
-class TaskOut(TaskBase):
-    id: int
-    owner_id: int
+# ADD THIS NEW SCHEMA FOR TASK UPDATES
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    priority: Optional[str] = None
+    status: Optional[str] = None
+    due_date: Optional[datetime] = None
+
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class TaskResponse(TaskBase):
+    id: int
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Auth schemas
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

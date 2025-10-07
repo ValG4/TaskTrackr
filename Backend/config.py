@@ -1,17 +1,22 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env file from the Backend directory
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(env_path)
 
-# Neon PostgreSQL database URL
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+psycopg2://neondb_owner:npg_6zyVGw4UqIOJ@ep-shy-bar-adpnamu2-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-)
 
-# SQLAlchemy setup
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-Base = declarative_base()
+class Config:
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    SECRET_KEY = os.getenv('SESSION_SECRET', 'dev-secret-key-change-in-production')
+
+    # Add SSL configuration for Neon.tech
+    if DATABASE_URL and 'neon.tech' in DATABASE_URL:
+        # Ensure SSL mode is required and add connection timeout
+        if 'sslmode=' not in DATABASE_URL:
+            DATABASE_URL += '?sslmode=require'
+        elif 'sslmode=prefer' in DATABASE_URL:
+            DATABASE_URL = DATABASE_URL.replace('sslmode=prefer', 'sslmode=require')
+
+    if not DATABASE_URL:
+        raise ValueError("DATABASE_URL environment variable is not set")
