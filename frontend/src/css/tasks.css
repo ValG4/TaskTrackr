@@ -9,10 +9,11 @@
 }
 
 .dashboard-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #000428 0%, #004e92 100%);
   color: white;
   padding: 25px 30px;
   border-radius: 15px;
+  margin-top: 15px;
   margin-bottom: 25px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -94,10 +95,10 @@ body, #root, .App {
   transform: translateY(-5px);
 }
 
-.stat-card.total { border-left-color: #667eea; }
+.stat-card.total { border-left-color: #004e92; }
 .stat-card.pending { border-left-color: #ffa502; }
-.stat-card.in-progress { border-left-color: #2ed573; }
-.stat-card.completed { border-left-color: #1e90ff; }
+.stat-card.in-progress { border-left-color: #1e90ff; }
+.stat-card.completed { border-left-color: #2ed573; }
 
 .stat-card h3 {
   margin: 0 0 10px 0;
@@ -162,14 +163,14 @@ body, #root, .App {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #667eea;
+  color: #004e92;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s;
 }
 
 .chart-toggle button.active {
-  background: #667eea;
+  background: #004e92;
   color: white;
 }
 
@@ -241,7 +242,7 @@ body, #root, .App {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #667eea;
+  color: #004e92;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s;
@@ -249,7 +250,7 @@ body, #root, .App {
 }
 
 .tab.active {
-  background: #667eea;
+  background: #004e92;
   color: white;
 }
 
@@ -258,7 +259,7 @@ body, #root, .App {
 }
 
 .add-task-btn-header {
-  background: #667eea;
+  background: #004e92;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -271,7 +272,7 @@ body, #root, .App {
 }
 
 .add-task-btn-header:hover {
-  background: #5a6fd8;
+  background: #000428;
   transform: translateY(-2px);
 }
 
@@ -326,9 +327,9 @@ body, #root, .App {
   transform: translateY(-2px);
 }
 
-.task-card.low { border-left-color: #2ed573; }
-.task-card.medium { border-left-color: #ffa502; }
-.task-card.high { border-left-color: #ff4757; }
+.task-card.low { border-left-color: #2ed573; border-left-width: 5px }
+.task-card.medium { border-left-color: #ffa502; border-left-width: 5px}
+.task-card.high { border-left-color: #ff4757; border-left-width: 5px}
 
 .task-header {
   display: flex;
