@@ -131,12 +131,12 @@ export default function Tasks({ token, user, onLogout }) {
   // Get the current chart data based on chartType
   const currentChartData = chartType === 'status' ? statusChartData : priorityChartData;
 
-  if (loading) return (
+  /*if (loading) return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div className="header-content">
           <div className="header-text">
-            <h1>Welcome, {user?.username || "User"}! 👋</h1>
+            <h1>Welcome, {user?.username || "User"}!</h1>
             <p>Here's your task dashboard</p>
           </div>
           <button className="logout-btn" onClick={onLogout}>
@@ -146,14 +146,14 @@ export default function Tasks({ token, user, onLogout }) {
       </header>
       <div className="loading">Loading your dashboard...</div>
     </div>
-  );
+  );*/
 
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div className="header-content">
           <div className="header-text">
-            <h1>Welcome, {user?.username || "User"}! 👋</h1>
+            <h1>Welcome, {user?.username || "User"}! </h1>
             <p>Here's your task dashboard</p>
           </div>
           <button className="logout-btn" onClick={onLogout}>
