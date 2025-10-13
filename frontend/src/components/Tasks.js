@@ -1,4 +1,4 @@
-// src/components/Tasks.js - WITH WORKING CHART TOGGLE
+// src/components/Tasks.js - WITH WORKING CHART TOGGLE AND TASK CALENDAR
 import { useState, useEffect, useRef } from "react";
 import { getTasks, updateTask, deleteTask } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ export default function Tasks({ token, user, onLogout }) {
   const [error, setError] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [chartType, setChartType] = useState("status");
+  const [currentDate, setCurrentDate] = useState(new Date());
   const navigate = useNavigate();
   const tasksSectionRef = useRef(null);
   const hasInitializedRef = useRef(false);
@@ -131,22 +132,121 @@ export default function Tasks({ token, user, onLogout }) {
   // Get the current chart data based on chartType
   const currentChartData = chartType === 'status' ? statusChartData : priorityChartData;
 
-  /*if (loading) return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="header-text">
-            <h1>Welcome, {user?.username || "User"}!</h1>
-            <p>Here's your task dashboard</p>
-          </div>
-          <button className="logout-btn" onClick={onLogout}>
-            Logout
-          </button>
-        </div>
-      </header>
-      <div className="loading">Loading your dashboard...</div>
-    </div>
-  );*/
+  // CALENDAR FUNCTIONS - FIXED DATE HANDLING
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const getLastDayOfPreviousMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+  };
+
+  // Handle database format "2025-10-07 18:03:00+00" - ROBUST VERSION
+  const getTasksForDate = (date) => {
+    return tasks.filter(task => {
+      if (!task.dueDate) return false;
+      
+      try {
+        // Get the target calendar date in YYYY-MM-DD format
+        const targetYear = date.getFullYear();
+        const targetMonth = date.getMonth() + 1; // JavaScript months are 0-indexed
+        const targetDay = date.getDate();
+        const targetDateStr = `${targetYear}-${targetMonth.toString().padStart(2, '0')}-${targetDay.toString().padStart(2, '0')}`;
+        
+        // Parse task due date - handle "2025-10-07 18:03:00+00" format
+        const taskDateStr = task.dueDate.split(' ')[0]; // Get "2025-10-07" part
+        
+        // Compare the date strings directly
+        return taskDateStr === targetDateStr;
+      } catch (error) {
+        return false;
+      }
+    });
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'high': return '#FF4757';
+      case 'medium': return '#FFA502';
+      case 'low': return '#2ED573';
+      default: return '#1E90FF';
+    }
+  };
+
+  const navigateMonth = (direction) => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() + direction);
+      return newDate;
+    });
+  };
+
+  // Generate calendar data
+  const generateCalendar = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const daysInMonth = getDaysInMonth(currentDate);
+    const firstDay = getFirstDayOfMonth(currentDate);
+    const lastDayPrevMonth = getLastDayOfPreviousMonth(currentDate);
+
+    const calendar = [];
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    // Add header row
+    calendar.push(daysOfWeek);
+
+    let week = [];
+    
+    // Previous month's days
+    for (let i = firstDay - 1; i >= 0; i--) {
+      week.push({
+        date: new Date(year, month - 1, lastDayPrevMonth - i),
+        isCurrentMonth: false,
+        tasks: []
+      });
+    }
+
+    // Current month's days
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dayTasks = getTasksForDate(date);
+      
+      week.push({
+        date,
+        isCurrentMonth: true,
+        tasks: dayTasks
+      });
+
+      if (week.length === 7) {
+        calendar.push(week);
+        week = [];
+      }
+    }
+
+    // Next month's days
+    if (week.length > 0) {
+      let nextMonthDay = 1;
+      while (week.length < 7) {
+        week.push({
+          date: new Date(year, month + 1, nextMonthDay),
+          isCurrentMonth: false,
+          tasks: []
+        });
+        nextMonthDay++;
+      }
+      calendar.push(week);
+    }
+
+    return calendar;
+  };
+
+  const calendar = generateCalendar();
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
 
   return (
     <div className="dashboard-container">
@@ -176,33 +276,99 @@ export default function Tasks({ token, user, onLogout }) {
       </div>
 
       <div className="dashboard-content">
-        <div className="pie-chart-section">
-          <div className="chart-header">
-            <h2>Task Overview</h2>
-            <div className="chart-toggle">
-              <button
-                className={chartType === 'status' ? 'active' : ''}
-                onClick={() => setChartType('status')}
-              >
-                Status
-              </button>
-              <button
-                className={chartType === 'priority' ? 'active' : ''}
-                onClick={() => setChartType('priority')}
-              >
-                Priority
-              </button>
+        <div className="charts-column">
+          {/* PIE CHART SECTION */}
+          <div className="pie-chart-section">
+            <div className="chart-header">
+              <h2>Task Overview</h2>
+              <div className="chart-toggle">
+                <button
+                  className={chartType === 'status' ? 'active' : ''}
+                  onClick={() => setChartType('status')}
+                >
+                  Status
+                </button>
+                <button
+                  className={chartType === 'priority' ? 'active' : ''}
+                  onClick={() => setChartType('priority')}
+                >
+                  Priority
+                </button>
+              </div>
+            </div>
+            {taskStats.total > 0 ? (
+              <div className="pie-chart-container">
+                <Pie data={currentChartData} options={chartOptions} />
+              </div>
+            ) : (
+              <div className="empty-chart">
+                <p>No tasks yet. Create your first task to see the chart!</p>
+              </div>
+            )}
+          </div>
+
+          {/* TASK CALENDAR SECTION */}
+          <div className="calendar-section">
+            <div className="calendar-header">
+              <h2>Task Calendar</h2>
+              <div className="calendar-navigation">
+                <button onClick={() => navigateMonth(-1)}>‹</button>
+                <span>{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
+                <button onClick={() => navigateMonth(1)}>›</button>
+              </div>
+            </div>
+            <div className="calendar-container">
+              <table className="calendar-table">
+                <thead>
+                  <tr>
+                    {calendar[0]?.map((day, index) => (
+                      <th key={index}>{day}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {calendar.slice(1).map((week, weekIndex) => (
+                    <tr key={weekIndex}>
+                      {week.map((day, dayIndex) => (
+                        <td 
+                          key={dayIndex} 
+                          className={`calendar-day ${day.isCurrentMonth ? 'current-month' : 'other-month'} ${
+                            day.date.toDateString() === new Date().toDateString() ? 'today' : ''
+                          }`}
+                        >
+                          <div className="day-number">{day.date.getDate()}</div>
+                          <div className="day-tasks">
+                            {day.tasks.map((task, taskIndex) => (
+                              <div 
+                                key={taskIndex}
+                                className="task-dot"
+                                style={{ backgroundColor: getPriorityColor(task.priority) }}
+                                title={`${task.title} (${task.priority} priority)`}
+                              />
+                            ))}
+                          </div>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="calendar-legend">
+              <div className="legend-item">
+                <div className="legend-color high"></div>
+                <span>High Priority</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color medium"></div>
+                <span>Medium Priority</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color low"></div>
+                <span>Low Priority</span>
+              </div>
             </div>
           </div>
-          {taskStats.total > 0 ? (
-            <div className="pie-chart-container">
-              <Pie data={currentChartData} options={chartOptions} />
-            </div>
-          ) : (
-            <div className="empty-chart">
-              <p>No tasks yet. Create your first task to see the chart!</p>
-            </div>
-          )}
         </div>
 
         <div className="tasks-section">
@@ -234,6 +400,11 @@ export default function Tasks({ token, user, onLogout }) {
                       </div>
                     </div>
                     {task.description && <p className="task-description">{task.description}</p>}
+                    {task.dueDate && (
+                      <div className="task-due-date">
+                        📅 Due: {new Date(task.dueDate).toLocaleDateString()}
+                      </div>
+                    )}
                     <div className="task-actions">
                       {task.status !== "completed" && (
                         <>
