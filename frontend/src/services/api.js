@@ -72,23 +72,67 @@ class ApiService {
 
     // Task methods
     async getTasks(userId) {
-        return this.request(`/tasks?user_id=${userId}`);
+        const response = await this.request(`/tasks?user_id=${userId}`);
+
+        // Normalize field names from snake_case to camelCase
+        const normalizeTask = (task) => ({
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            priority: task.priority,
+            dueDate: task.due_date, // Map due_date to dueDate
+            userId: task.user_id,
+            createdAt: task.created_at,
+            updatedAt: task.updated_at
+        });
+
+        // Handle different response structures
+        if (Array.isArray(response)) {
+            return response.map(normalizeTask);
+        } else if (response.tasks && Array.isArray(response.tasks)) {
+            return {
+                ...response,
+                tasks: response.tasks.map(normalizeTask)
+            };
+        } else if (response.data && Array.isArray(response.data)) {
+            return {
+                ...response,
+                data: response.data.map(normalizeTask)
+            };
+        }
+
+        return response;
     }
 
     async createTask(taskData, userId) {
       const { user_id, ...taskBody } = taskData;
       const actualUserId = userId || user_id;
 
+      // Convert camelCase back to snake_case for API
+      const apiTaskData = { ...taskBody };
+      if (apiTaskData.dueDate) {
+          apiTaskData.due_date = apiTaskData.dueDate;
+          delete apiTaskData.dueDate;
+      }
+
       return this.request(`/tasks?user_id=${actualUserId}`, {
         method: 'POST',
-        body: taskBody
+        body: apiTaskData
       });
     }
 
     async updateTask(taskId, updates) {
+        // Convert camelCase back to snake_case for API
+        const apiUpdates = { ...updates };
+        if (apiUpdates.dueDate) {
+            apiUpdates.due_date = apiUpdates.dueDate;
+            delete apiUpdates.dueDate;
+        }
+
         return this.request(`/tasks/${taskId}`, {
             method: 'PUT',
-            body: updates
+            body: apiUpdates
         });
     }
 

@@ -685,3 +685,193 @@ body, #root, .App {
     flex-wrap: wrap;
   }
 }
+
+/* Calendar View Toggle */
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Calendar View Toggle */
+.calendar-view-toggle {
+  display: flex;
+  gap: 10px;
+  background: #f8f9fa;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.calendar-view-toggle button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #004e92;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.calendar-view-toggle button.active {
+  background: #004e92;
+  color: white;
+}
+
+.calendar-view-toggle button:hover:not(.active) {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* Task Indicators */
+.task-indicator {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin: 1px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.task-indicator:hover {
+  transform: scale(1.3);
+}
+
+/* Weekly Calendar */
+.calendar-table.weekly-view {
+  height: 120px;
+}
+
+.calendar-table.weekly-view td {
+  height: 100px;
+  vertical-align: top;
+}
+
+/* Daily Calendar */
+.daily-calendar {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
+.daily-header {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  background: #f8f9fa;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.daily-header > div {
+  padding: 10px;
+  border-right: 1px solid #e9ecef;
+}
+
+.daily-header > div:last-child {
+  border-right: none;
+}
+
+.daily-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.hour-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  border-bottom: 1px solid #f0f0f0;
+  min-height: 50px;
+}
+
+.hour-row:hover {
+  background: #f8f9fa;
+}
+
+.hour-label {
+  padding: 10px;
+  border-right: 1px solid #e9ecef;
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  background: white;
+}
+
+.hour-tasks {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 40px;
+}
+
+.daily-task {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.daily-task:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Status Legend */
+.status-legend {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.status-legend.full {
+  background: #004e92;
+  border: 2px solid #004e92;
+}
+
+.status-legend.half {
+  background: linear-gradient(90deg, #004e92 50%, transparent 50%);
+  border: 2px solid #004e92;
+}
+
+.status-legend.empty {
+  background: transparent;
+  border: 2px solid #004e92;
+}
+
+/* Calendar Legend Layout */
+.calendar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-color.high {
+  background: #FF4757;
+}
+
+.legend-color.medium {
+  background: #FFA502;
+}
+
+.legend-color.low {
+  background: #2ED573;
+}
