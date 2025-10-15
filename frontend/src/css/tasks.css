@@ -875,3 +875,19 @@ body, #root, .App {
 .legend-color.low {
   background: #2ED573;
 }
+
+.btn-edit {
+  background: #1e90ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+  font-weight: 500;
+}
+
+.btn-edit:hover {
+  background: #187bcd;
+}

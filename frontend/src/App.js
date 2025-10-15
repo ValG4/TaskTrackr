@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./components/Login";
 import Tasks from "./components/Tasks";
 import CreateTask from "./components/CreateTask";
+import EditTask from "./components/EditTask";
 import apiService from "./services/api"; // Import the apiService instance
 
 function App() {
@@ -112,6 +113,8 @@ function App() {
             <Navigate to={token ? "/tasks" : "/login"} replace />
           }
         />
+
+        <Route path="/edit-task/:taskId" element={<EditTask token={token} user={user} />} />
       </Routes>
     </Router>
   );

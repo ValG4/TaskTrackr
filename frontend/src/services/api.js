@@ -122,18 +122,37 @@ class ApiService {
       });
     }
 
-    async updateTask(taskId, updates) {
+    // UPDATE TASK METHOD
+    async updateTask(taskId, taskData) {
         // Convert camelCase back to snake_case for API
-        const apiUpdates = { ...updates };
-        if (apiUpdates.dueDate) {
-            apiUpdates.due_date = apiUpdates.dueDate;
-            delete apiUpdates.dueDate;
+        const apiTaskData = { ...taskData };
+        if (apiTaskData.dueDate) {
+            apiTaskData.due_date = apiTaskData.dueDate;
+            delete apiTaskData.dueDate;
         }
 
         return this.request(`/tasks/${taskId}`, {
             method: 'PUT',
-            body: apiUpdates
+            body: apiTaskData
         });
+    }
+
+    // GET TASK BY ID METHOD
+    async getTaskById(taskId) {
+        const response = await this.request(`/tasks/${taskId}`);
+
+        // Normalize field names from snake_case to camelCase
+        return {
+            id: response.id,
+            title: response.title,
+            description: response.description,
+            status: response.status,
+            priority: response.priority,
+            dueDate: response.due_date,
+            userId: response.user_id,
+            createdAt: response.created_at,
+            updatedAt: response.updated_at
+        };
     }
 
     async deleteTask(taskId) {
@@ -146,13 +165,14 @@ class ApiService {
 // Create instance
 const apiService = new ApiService();
 
-// Export named exports for the functions your components are using
+// Export named exports for the functions the components are using
 export const registerUser = (userData) => apiService.registerUser(userData);
 export const loginUser = (credentials) => apiService.loginUser(credentials);
 export const logoutUser = () => apiService.logoutUser();
 export const getTasks = (userId) => apiService.getTasks(userId);
-export const createTask = (taskData) => apiService.createTask(taskData);
+export const createTask = (taskData, userId) => apiService.createTask(taskData, userId);
 export const updateTask = (taskId, updates) => apiService.updateTask(taskId, updates);
+export const getTaskById = (taskId) => apiService.getTaskById(taskId);
 export const deleteTask = (taskId) => apiService.deleteTask(taskId);
 
 // Also export the default instance

@@ -52,7 +52,6 @@ def update_task(db: Session, task_id: int, task_data: dict):
         print(f"✅ Task {task_id} updated in database")
     return db_task
 
-# ADD THIS MISSING FUNCTION
 def delete_task(db: Session, task_id: int):
     db_task = db.query(Task).filter(Task.id == task_id).first()
     if db_task:

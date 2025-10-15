@@ -690,6 +690,7 @@ export default function Tasks({ token, user, onLogout }) {
                         <>
                           <button className="btn-complete" onClick={() => handleUpdateTask(task.id, { status: "completed" })}>✅ Complete</button>
                           <button className="btn-progress" onClick={() => handleUpdateTask(task.id, { status: "in-progress" })}>🔄 In Progress</button>
+                          <button className="btn-edit" onClick={() => navigate(`/edit-task/${task.id}`)}>✏️ Edit</button>
                         </>
                       )}
                       <button className="btn-delete" onClick={() => handleDeleteTask(task.id)}>🗑️ Delete</button>
