@@ -377,29 +377,109 @@ body, #root, .App {
   font-size: 1rem;
 }
 
+/* New Circular Task Action Buttons */
 .task-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: 15px;
+  align-items: center;
 }
 
-.task-actions button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
+.task-actions .action-btn {
+  background: #2ed573;
+  border: 2px solid #2ed573;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.3s;
-  font-weight: 500;
+  padding: 0;
 }
 
-.btn-complete { background: #2ed573; color: white; }
-.btn-progress { background: #1e90ff; color: white; }
-.btn-delete { background: #ff4757; color: white; }
+.task-actions .action-btn .icon {
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+}
 
-.btn-complete:hover { background: #26c465; }
-.btn-progress:hover { background: #187bcd; }
-.btn-delete:hover { background: #ff3742; }
+.task-actions .action-btn .text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.task-actions .action-btn:hover {
+  width: 120px;
+  border-radius: 25px;
+}
+
+.task-actions .action-btn:hover .icon {
+  opacity: 0;
+}
+
+.task-actions .action-btn:hover .text {
+  opacity: 1;
+}
+
+/* Button Colors */
+.task-actions .btn-complete {
+  background: #00A36D ;
+  border-color: #00A36D ;
+}
+
+.task-actions .btn-complete:hover {
+  background: #2ed573;
+  border-color: #2ed573;
+}
+
+.task-actions .btn-progress {
+  background: #1B00A3;
+  border-color: #1B00A3;
+}
+
+.task-actions .btn-progress:hover {
+  background: #1e90ff;
+  border-color: #1e90ff;
+}
+
+.task-actions .btn-edit {
+  background: #A36D00;
+  border-color: #A36D00;
+}
+
+.task-actions .btn-edit:hover {
+  background: #ffa502;
+  border-color: #ffa502;
+}
+
+.task-actions .btn-delete {
+  background: #A30036;
+  border-color: #A30036;
+}
+
+.task-actions .btn-delete:hover {
+  background: #ff4757;
+  border-color: #ff4757;
+}
 
 .empty-state {
   text-align: center;
@@ -579,15 +659,15 @@ body, #root, .App {
 }
 
 .legend-color.high {
-  background: #FF4757;
+  background: #ff4757;
 }
 
 .legend-color.medium {
-  background: #FFA502;
+  background: #ffa502;
 }
 
 .legend-color.low {
-  background: #2ED573;
+  background: #2ed573;
 }
 
 .task-due-date {
@@ -599,93 +679,6 @@ body, #root, .App {
   gap: 5px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .dashboard-content {
-    grid-template-columns: 1fr;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .chart-header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .section-header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-
-  .filter-tabs {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .tab {
-    padding: 6px 12px;
-    font-size: 0.9rem;
-  }
-
-  .tasks-scroll-container {
-    max-height: 400px;
-  }
-
-  .section-actions {
-    flex-direction: column;
-    gap: 15px;
-    align-items: stretch;
-  }
-
-  .add-task-btn-header {
-    align-self: center;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-    padding: 20px;
-  }
-
-  .header-content {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .header-text h1 {
-    font-size: 1.8rem;
-  }
-
-  .logout-btn {
-    width: 100%;
-    max-width: 200px;
-  }
-
-  .calendar-navigation {
-    gap: 10px;
-  }
-
-  .calendar-navigation span {
-    font-size: 1rem;
-    min-width: 150px;
-  }
-
-  .calendar-table td {
-    height: 50px;
-    padding: 4px 2px;
-  }
-
-  .calendar-legend {
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-}
-
 /* Calendar View Toggle */
 .calendar-controls {
   display: flex;
@@ -694,7 +687,6 @@ body, #root, .App {
   margin-bottom: 15px;
 }
 
-/* Calendar View Toggle */
 .calendar-view-toggle {
   display: flex;
   gap: 10px;
@@ -865,29 +857,105 @@ body, #root, .App {
 }
 
 .legend-color.high {
-  background: #FF4757;
+  background: #ff4757;
 }
 
 .legend-color.medium {
-  background: #FFA502;
+  background: #ffa502;
 }
 
 .legend-color.low {
-  background: #2ED573;
+  background: #2ed573;
 }
 
-.btn-edit {
-  background: #1e90ff;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.3s;
-  font-weight: 500;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
 
-.btn-edit:hover {
-  background: #187bcd;
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .filter-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tab {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .tasks-scroll-container {
+    max-height: 400px;
+  }
+
+  .section-actions {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .add-task-btn-header {
+    align-self: center;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-text h1 {
+    font-size: 1.8rem;
+  }
+
+  .logout-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .calendar-navigation {
+    gap: 10px;
+  }
+
+  .calendar-navigation span {
+    font-size: 1rem;
+    min-width: 150px;
+  }
+
+  .calendar-table td {
+    height: 50px;
+    padding: 4px 2px;
+  }
+
+  .calendar-legend {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .task-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

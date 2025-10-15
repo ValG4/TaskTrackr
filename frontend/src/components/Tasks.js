@@ -112,8 +112,8 @@ export default function Tasks({ token, user, onLogout }) {
     labels: ['Low Priority', 'Medium Priority', 'High Priority'],
     datasets: [{
       data: [taskStats.low, taskStats.medium, taskStats.high],
-      backgroundColor: ['#2ED573', '#FFA502', '#FF4757'],
-      borderColor: ['#2ED573', '#FFA502', '#FF4757'],
+      backgroundColor: ['#2ed573', '#ffa502', '#ff4757'],
+      borderColor: ['#2ed573', '#ffa502', '#ff4757'],
       borderWidth: 2,
     }],
   };
@@ -181,9 +181,9 @@ export default function Tasks({ token, user, onLogout }) {
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'high': return '#FF4757';
-      case 'medium': return '#FFA502';
-      case 'low': return '#2ED573';
+      case 'high': return '#ff4757';
+      case 'medium': return '#ffa502';
+      case 'low': return '#00A36D';
       default: return '#1E90FF';
     }
   };
@@ -685,16 +685,48 @@ export default function Tasks({ token, user, onLogout }) {
                         📅 Due: {new Date(task.dueDate).toLocaleDateString()}
                       </div>
                     )}
-                    <div className="task-actions">
-                      {task.status !== "completed" && (
-                        <>
-                          <button className="btn-complete" onClick={() => handleUpdateTask(task.id, { status: "completed" })}>✅ Complete</button>
-                          <button className="btn-progress" onClick={() => handleUpdateTask(task.id, { status: "in-progress" })}>🔄 In Progress</button>
-                          <button className="btn-edit" onClick={() => navigate(`/edit-task/${task.id}`)}>✏️ Edit</button>
-                        </>
-                      )}
-                      <button className="btn-delete" onClick={() => handleDeleteTask(task.id)}>🗑️ Delete</button>
-                    </div>
+                      <div className="task-actions">
+                          {task.status !== "completed" && (
+                            <>
+                              <button
+                                className="action-btn btn-complete"
+                                onClick={() => handleUpdateTask(task.id, { status: "completed" })}
+                                title="Mark as Complete"
+                              >
+                                <span className="icon">✓</span>
+                                <span className="text">Complete</span>
+                              </button>
+
+                               <button
+                                className="action-btn btn-edit"
+                                onClick={() => navigate(`/edit-task/${task.id}`)}
+                                title="Edit Task"
+                              >
+                                <span className="icon">✎</span>
+                                <span className="text">Edit</span>
+                              </button>
+
+                              <button
+                                className="action-btn btn-progress"
+                                onClick={() => handleUpdateTask(task.id, { status: "in-progress" })}
+                                title="Mark as In Progress"
+                              >
+                                <span className="icon">↻</span>
+                                <span className="text">In Progress</span>
+                              </button>
+                            </>
+                          )}
+
+                          <button
+                            className="action-btn btn-delete"
+                            onClick={() => handleDeleteTask(task.id)}
+                            title="Delete Task"
+                          >
+                            <span className="icon">×</span>
+                            <span className="text">Delete</span>
+                          </button>
+                        </div>
+
                   </div>
                 ))
               ) : (
